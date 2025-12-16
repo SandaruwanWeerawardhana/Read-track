@@ -16,7 +16,7 @@ namespace LibraryApi.Controllers
             _context = context;
         }
 
-        // CREATE
+
         [HttpPost]
         public async Task<IActionResult> CreateBook(Book book)
         {
@@ -28,14 +28,14 @@ namespace LibraryApi.Controllers
             return Ok(book);
         }
 
-        // READ ALL
+
         [HttpGet]
         public async Task<IActionResult> GetBooks()
         {
             return Ok(await _context.Books.ToListAsync());
         }
 
-        // READ BY ID
+
         [HttpGet("{id}")]
         public async Task<IActionResult> GetBook(int id)
         {
@@ -47,7 +47,7 @@ namespace LibraryApi.Controllers
             return Ok(book);
         }
 
-        // UPDATE
+
         [HttpPut("{id}")]
         public async Task<IActionResult> UpdateBook(int id, Book updatedBook)
         {
@@ -67,7 +67,7 @@ namespace LibraryApi.Controllers
             return Ok(book);
         }
 
-        // DELETE
+
         [HttpDelete("{id}")]
         public async Task<IActionResult> DeleteBook(int id)
         {
