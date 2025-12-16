@@ -36,23 +36,23 @@ const BookDetailsPage = () => {
     }
   };
 
-  if (!book) {
-    return (
-      <>
-        <Link
-          to="/"
-          className="inline-flex items-center gap-2 text-text-secondary font-medium mb-6 hover:text-accent-primary transition-colors duration-150"
-        >
-          ← Back to Books
-        </Link>
-        <div className="text-center py-12 bg-bg-secondary/80 border border-dashed border-white/10 rounded-xl">
-          <div className="text-6xl mb-6 opacity-50">📖</div>
-          <h3 className="text-2xl font-semibold mb-2 text-text-primary">
-            Book not found
-          </h3>
-          <p className="text-text-muted mb-8">
-            The book you're looking for doesn't exist or has been deleted.
-          </p>
+if (!book) {
+  return (
+    <>
+      <Link
+        to="/"
+        className="inline-flex items-center gap-2 text-text-secondary font-medium mb-6 hover:text-accent-primary transition-colors duration-150"
+      >
+        ← Back to Books
+      </Link>
+      <div className="text-center py-12 bg-bg-secondary/80 border border-dashed border-white/10 rounded-xl">
+        <div className="text-6xl mb-6 opacity-50">📖</div>
+        <h3 className="text-2xl font-semibold mb-2 text-text-primary">
+          Book not found
+        </h3>
+        <p className="text-text-muted mb-8">
+          The book you're looking for doesn't exist or has been deleted.
+        </p>
           <Link to="/" className="btn btn-primary btn-lg">
             Go to Home
           </Link>
@@ -96,12 +96,8 @@ const BookDetailsPage = () => {
 
         {book.description && (
           <div className="mb-8">
-            <h2 className="text-sm font-semibold text-text-muted uppercase tracking-wide mb-4">
-              Description
-            </h2>
-            <p className="text-lg leading-relaxed text-text-secondary">
-              {book.description}
-            </p>
+            <h2 className="text-sm font-semibold text-text-muted uppercase tracking-wide mb-4">Description</h2>
+            <p className="text-lg leading-relaxed text-text-secondary">{book.description}</p>
           </div>
         )}
       </div>
@@ -112,13 +108,11 @@ const BookDetailsPage = () => {
         title="Delete Book"
       >
         <p className="mb-6 text-text-secondary">
-          Are you sure you want to delete{" "}
-          <strong className="text-text-primary">"{book.title}"</strong>? This
-          action cannot be undone.
+          Are you sure you want to delete <strong className="text-text-primary">"{book.title}"</strong>? This action cannot be undone.
         </p>
         <div className="flex justify-end gap-4">
-          <button
-            className="btn btn-secondary"
+          <button 
+            className="btn btn-secondary" 
             onClick={() => setShowDeleteModal(false)}
             disabled={isDeleting}
           >

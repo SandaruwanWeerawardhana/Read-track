@@ -29,16 +29,12 @@ const BookCard = ({ book }: BookCardProps) => {
       <article className="card">
         <div className="flex items-start justify-between gap-4 mb-4">
           <div>
-            <h3 className="text-lg font-semibold text-text-primary line-clamp-2">
-              {book.title}
-            </h3>
+            <h3 className="text-lg font-semibold text-text-primary line-clamp-2">{book.title}</h3>
             <p className="text-sm text-text-muted mt-1">by {book.author}</p>
           </div>
         </div>
         {book.description && (
-          <p className="text-text-secondary text-[0.9375rem] leading-relaxed line-clamp-3">
-            {book.description}
-          </p>
+          <p className="text-text-secondary text-[0.9375rem] leading-relaxed line-clamp-3">{book.description}</p>
         )}
         <div className="flex gap-2 mt-6 pt-4 border-t border-white/10">
           <Link to={`/book/${book.id}`} className="btn btn-secondary flex-1">
@@ -66,13 +62,11 @@ const BookCard = ({ book }: BookCardProps) => {
         title="Delete Book"
       >
         <p className="mb-6 text-text-secondary">
-          Are you sure you want to delete{" "}
-          <strong className="text-text-primary">"{book.title}"</strong>? This
-          action cannot be undone.
+          Are you sure you want to delete <strong className="text-text-primary">"{book.title}"</strong>? This action cannot be undone.
         </p>
         <div className="flex justify-end gap-4">
-          <button
-            className="btn btn-secondary"
+          <button 
+            className="btn btn-secondary" 
             onClick={() => setShowDeleteModal(false)}
             disabled={isDeleting}
           >

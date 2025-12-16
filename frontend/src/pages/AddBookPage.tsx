@@ -28,7 +28,6 @@ const AddBookPage = () => {
       >
         ← Back to Books
       </Link>
-
       <div className="max-w-xl mx-auto">
         <div className="bg-bg-secondary/80 border border-white/10 rounded-xl p-8">
           <h1 className="text-2xl font-semibold text-text-primary mb-8">
