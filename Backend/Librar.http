@@ -1,0 +1,6 @@
+@Librar_HostAddress = http://localhost:5184
+
+GET {{Librar_HostAddress}}/weatherforecast/
+Accept: application/json
+
+###
