@@ -1,3 +1,4 @@
+import { useState, useEffect } from 'react';
 import { Link, useNavigate, useParams } from 'react-router-dom';
 import { useBookStore } from '../store/bookStore';
 import BookForm from '../components/BookForm';
@@ -8,13 +9,31 @@ const EditBookPage = () => {
   const navigate = useNavigate();
   const getBook = useBookStore((state) => state.getBook);
   const updateBook = useBookStore((state) => state.updateBook);
+  const fetchBooks = useBookStore((state) => state.fetchBooks);
+  const books = useBookStore((state) => state.books);
+  const [isSubmitting, setIsSubmitting] = useState(false);
 
-  const book = id ? getBook(id) : undefined;
+  const numericId = id ? parseInt(id, 10) : undefined;
+  const book = numericId ? getBook(numericId) : undefined;
 
-  const handleSubmit = (data: BookFormData) => {
-    if (id) {
-      updateBook(id, data);
-      navigate(`/book/${id}`);
+  // Fetch books if not loaded
+  useEffect(() => {
+    if (books.length === 0) {
+      fetchBooks();
+    }
+  }, [books.length, fetchBooks]);
+
+  const handleSubmit = async (data: BookFormData) => {
+    if (numericId) {
+      setIsSubmitting(true);
+      try {
+        await updateBook(numericId, data);
+        navigate(`/book/${id}`);
+      } catch {
+        // Error is handled in the store
+      } finally {
+        setIsSubmitting(false);
+      }
     }
   };
 
@@ -56,7 +75,8 @@ const EditBookPage = () => {
               description: book.description || '',
             }}
             onSubmit={handleSubmit} 
-            submitLabel="Save Changes" 
+            submitLabel="Save Changes"
+            isLoading={isSubmitting}
           />
         </div>
       </div>

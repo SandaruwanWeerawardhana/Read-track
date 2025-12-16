@@ -1,3 +1,4 @@
+import { useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import { useBookStore } from '../store/bookStore';
 import BookForm from '../components/BookForm';
@@ -6,10 +7,18 @@ import type { BookFormData } from '../types/book';
 const AddBookPage = () => {
   const navigate = useNavigate();
   const addBook = useBookStore((state) => state.addBook);
+  const [isSubmitting, setIsSubmitting] = useState(false);
 
-  const handleSubmit = (data: BookFormData) => {
-    addBook(data);
-    navigate('/');
+  const handleSubmit = async (data: BookFormData) => {
+    setIsSubmitting(true);
+    try {
+      await addBook(data);
+      navigate('/');
+    } catch {
+      // Error is handled in the store
+    } finally {
+      setIsSubmitting(false);
+    }
   };
 
   return (
@@ -23,7 +32,7 @@ const AddBookPage = () => {
           <h1 className="text-2xl font-semibold text-text-primary mb-8">
             Add New Book
           </h1>
-          <BookForm onSubmit={handleSubmit} submitLabel="Add Book" />
+          <BookForm onSubmit={handleSubmit} submitLabel="Add Book" isLoading={isSubmitting} />
         </div>
       </div>
     </>

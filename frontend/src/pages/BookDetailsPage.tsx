@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { Link, useNavigate, useParams } from 'react-router-dom';
 import { useBookStore } from '../store/bookStore';
 import Modal from '../components/Modal';
@@ -7,16 +7,34 @@ const BookDetailsPage = () => {
   const { id } = useParams<{ id: string }>();
   const navigate = useNavigate();
   const [showDeleteModal, setShowDeleteModal] = useState(false);
+  const [isDeleting, setIsDeleting] = useState(false);
   
   const getBook = useBookStore((state) => state.getBook);
   const deleteBook = useBookStore((state) => state.deleteBook);
+  const fetchBooks = useBookStore((state) => state.fetchBooks);
+  const books = useBookStore((state) => state.books);
 
-  const book = id ? getBook(id) : undefined;
+  const numericId = id ? parseInt(id, 10) : undefined;
+  const book = numericId ? getBook(numericId) : undefined;
 
-  const handleDelete = () => {
-    if (id) {
-      deleteBook(id);
-      navigate('/');
+  // Fetch books if not loaded
+  useEffect(() => {
+    if (books.length === 0) {
+      fetchBooks();
+    }
+  }, [books.length, fetchBooks]);
+
+  const handleDelete = async () => {
+    if (numericId) {
+      setIsDeleting(true);
+      try {
+        await deleteBook(numericId);
+        navigate('/');
+      } catch {
+        // Error is handled in the store
+        setIsDeleting(false);
+        setShowDeleteModal(false);
+      }
     }
   };
 
@@ -88,14 +106,16 @@ const BookDetailsPage = () => {
           <button 
             className="btn btn-secondary" 
             onClick={() => setShowDeleteModal(false)}
+            disabled={isDeleting}
           >
             Cancel
           </button>
           <button 
             className="btn btn-danger" 
             onClick={handleDelete}
+            disabled={isDeleting}
           >
-            Delete
+            {isDeleting ? 'Deleting...' : 'Delete'}
           </button>
         </div>
       </Modal>

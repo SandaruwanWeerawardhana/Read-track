@@ -1,7 +1,7 @@
+import { useState } from 'react';
 import { Link } from 'react-router-dom';
 import type { Book } from '../types/book';
 import { useBookStore } from '../store/bookStore';
-import { useState } from 'react';
 import Modal from '../components/Modal';
 
 interface BookCardProps {
@@ -10,11 +10,19 @@ interface BookCardProps {
 
 const BookCard = ({ book }: BookCardProps) => {
   const [showDeleteModal, setShowDeleteModal] = useState(false);
+  const [isDeleting, setIsDeleting] = useState(false);
   const deleteBook = useBookStore((state) => state.deleteBook);
 
-  const handleDelete = () => {
-    deleteBook(book.id);
-    setShowDeleteModal(false);
+  const handleDelete = async () => {
+    setIsDeleting(true);
+    try {
+      await deleteBook(book.id);
+      setShowDeleteModal(false);
+    } catch {
+      // Error is handled in the store
+    } finally {
+      setIsDeleting(false);
+    }
   };
 
   return (
@@ -58,14 +66,16 @@ const BookCard = ({ book }: BookCardProps) => {
           <button 
             className="btn btn-secondary" 
             onClick={() => setShowDeleteModal(false)}
+            disabled={isDeleting}
           >
             Cancel
           </button>
           <button 
             className="btn btn-danger" 
             onClick={handleDelete}
+            disabled={isDeleting}
           >
-            Delete
+            {isDeleting ? 'Deleting...' : 'Delete'}
           </button>
         </div>
       </Modal>
