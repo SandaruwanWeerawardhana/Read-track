@@ -20,11 +20,6 @@ export const useBookStore = create<BookStore>()((set, get) => ({
   books: [],
   loading: false,
   error: null,
-  toast: {
-    message: '',
-    type: 'info',
-    isVisible: false,
-  },
 
   fetchBooks: async () => {
     set({ loading: true, error: null });
