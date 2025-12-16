@@ -1,6 +1,5 @@
 import type { ReactNode } from 'react';
 import { Link } from 'react-router-dom';
-import Toast from '../components/Toast';
 
 interface LayoutProps {
   children: ReactNode;
@@ -11,7 +10,7 @@ const Layout = ({ children }: LayoutProps) => {
   return (
     <>
       <header className="bg-bg-primary/80 backdrop-blur-xl border-b border-white/10 sticky top-0 z-50">
-        <div className="max-w-7xl mx-auto px-6 flex items-center justify-between h-[70px]">
+        <div className="max-w-7xl mx-auto px-6 flex items-center justify-between h-17.5">
           <Link to="/" className="flex items-center gap-2 text-2xl font-bold logo-gradient">
             <span className="text-3xl">📚</span>
             <span>ReadTrack</span>
@@ -23,7 +22,6 @@ const Layout = ({ children }: LayoutProps) => {
           {children}
         </div>
       </main>
-      <Toast />
     </>
   );
 };
