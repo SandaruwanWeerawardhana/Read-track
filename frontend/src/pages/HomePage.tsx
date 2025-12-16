@@ -4,48 +4,35 @@ import BookCard from '../components/BookCard';
 import SearchBar from '../components/SearchBar';
 
 const HomePage = () => {
-  const books = useBookStore((state) => state.books);
   const getFilteredBooks = useBookStore((state) => state.getFilteredBooks);
   const searchQuery = useBookStore((state) => state.searchQuery);
   
   const filteredBooks = getFilteredBooks();
-  const totalBooks = books.length;
-
   return (
     <>
-      <section className="hero">
-        <h1 className="hero-title">Your Book Collection</h1>
-        <p className="hero-subtitle">
-          Manage your personal library with ease. Add, edit, and organize your favorite books all in one place.
-        </p>
-        <div className="hero-stats">
-          <div className="stat">
-            <div className="stat-value">{totalBooks}</div>
-            <div className="stat-label">Total Books</div>
-          </div>
-        </div>
-      </section>
-
-      <div className="page-header">
+      
+      {/* Page Header */}
+      <div className="flex items-center justify-between flex-wrap gap-6 mb-8">
         <SearchBar />
-        <div className="page-actions">
+        <div className="flex gap-4">
           <Link to="/add" className="btn btn-primary btn-lg">
             + Add New Book
           </Link>
         </div>
       </div>
 
+      {/* Book Grid */}
       {filteredBooks.length > 0 ? (
-        <div className="book-grid">
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
           {filteredBooks.map((book) => (
             <BookCard key={book.id} book={book} />
           ))}
         </div>
       ) : searchQuery ? (
-        <div className="empty-state">
-          <div className="empty-state-icon">🔍</div>
-          <h3 className="empty-state-title">No books found</h3>
-          <p className="empty-state-description">
+        <div className="text-center py-12 bg-bg-secondary/80 border border-dashed border-white/10 rounded-xl">
+          <div className="text-6xl mb-6 opacity-50">🔍</div>
+          <h3 className="text-2xl font-semibold mb-2 text-text-primary">No books found</h3>
+          <p className="text-text-muted mb-8">
             No books match your search "{searchQuery}". Try a different search term.
           </p>
           <button 
@@ -56,10 +43,10 @@ const HomePage = () => {
           </button>
         </div>
       ) : (
-        <div className="empty-state">
-          <div className="empty-state-icon">📚</div>
-          <h3 className="empty-state-title">No books yet</h3>
-          <p className="empty-state-description">
+        <div className="text-center py-12 bg-bg-secondary/80 border border-dashed border-white/10 rounded-xl">
+          <div className="text-6xl mb-6 opacity-50">📚</div>
+          <h3 className="text-2xl font-semibold mb-2 text-text-primary">No books yet</h3>
+          <p className="text-text-muted mb-8">
             Start building your library by adding your first book.
           </p>
           <Link to="/add" className="btn btn-primary btn-lg">

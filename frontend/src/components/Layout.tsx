@@ -1,5 +1,5 @@
 import type { ReactNode } from 'react';
-import { Link, useLocation } from 'react-router-dom';
+import { Link } from 'react-router-dom';
 import Toast from '../components/Toast';
 
 interface LayoutProps {
@@ -7,34 +7,19 @@ interface LayoutProps {
 }
 
 const Layout = ({ children }: LayoutProps) => {
-  const location = useLocation();
 
   return (
     <>
-      <header className="header">
-        <div className="container header-content">
-          <Link to="/" className="logo">
-            <span className="logo-icon">📚</span>
+      <header className="bg-bg-primary/80 backdrop-blur-xl border-b border-white/10 sticky top-0 z-50">
+        <div className="max-w-7xl mx-auto px-6 flex items-center justify-between h-[70px]">
+          <Link to="/" className="flex items-center gap-2 text-2xl font-bold logo-gradient">
+            <span className="text-3xl">📚</span>
             <span>ReadTrack</span>
           </Link>
-          <nav className="nav">
-            <Link 
-              to="/" 
-              className={`nav-link ${location.pathname === '/' ? 'active' : ''}`}
-            >
-              Books
-            </Link>
-            <Link 
-              to="/add" 
-              className={`nav-link ${location.pathname === '/add' ? 'active' : ''}`}
-            >
-              Add Book
-            </Link>
-          </nav>
         </div>
       </header>
-      <main className="page">
-        <div className="container">
+      <main className="flex-1 py-8 animate-fade-in">
+        <div className="max-w-7xl mx-auto px-6">
           {children}
         </div>
       </main>
