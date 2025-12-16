@@ -23,13 +23,13 @@ const BookDetailsPage = () => {
   if (!book) {
     return (
       <>
-        <Link to="/" className="back-link">
+        <Link to="/" className="inline-flex items-center gap-2 text-text-secondary font-medium mb-6 hover:text-accent-primary transition-colors duration-150">
           ← Back to Books
         </Link>
-        <div className="empty-state">
-          <div className="empty-state-icon">📖</div>
-          <h3 className="empty-state-title">Book not found</h3>
-          <p className="empty-state-description">
+        <div className="text-center py-12 bg-bg-secondary/80 border border-dashed border-white/10 rounded-xl">
+          <div className="text-6xl mb-6 opacity-50">📖</div>
+          <h3 className="text-2xl font-semibold mb-2 text-text-primary">Book not found</h3>
+          <p className="text-text-muted mb-8">
             The book you're looking for doesn't exist or has been deleted.
           </p>
           <Link to="/" className="btn btn-primary btn-lg">
@@ -42,20 +42,20 @@ const BookDetailsPage = () => {
 
   return (
     <>
-      <Link to="/" className="back-link">
+      <Link to="/" className="inline-flex items-center gap-2 text-text-secondary font-medium mb-6 hover:text-accent-primary transition-colors duration-150">
         ← Back to Books
       </Link>
       
-      <div className="book-detail">
-        <div className="book-detail-header">
+      <div className="max-w-3xl mx-auto">
+        <div className="flex items-start justify-between gap-6 mb-8 flex-col md:flex-row">
           <div>
-            <h1 className="book-detail-title">{book.title}</h1>
-            <p className="book-detail-author">
+            <h1 className="text-3xl font-bold text-text-primary mb-2">{book.title}</h1>
+            <p className="text-lg text-text-secondary flex items-center gap-2">
               <span>✍️</span>
               {book.author}
             </p>
           </div>
-          <div className="page-actions">
+          <div className="flex gap-4">
             <Link to={`/book/${id}/edit`} className="btn btn-secondary">
               Edit
             </Link>
@@ -69,9 +69,9 @@ const BookDetailsPage = () => {
         </div>
 
         {book.description && (
-          <div className="book-detail-section">
-            <h2 className="book-detail-section-title">Description</h2>
-            <p className="book-detail-description">{book.description}</p>
+          <div className="mb-8">
+            <h2 className="text-sm font-semibold text-text-muted uppercase tracking-wide mb-4">Description</h2>
+            <p className="text-lg leading-relaxed text-text-secondary">{book.description}</p>
           </div>
         )}
       </div>
@@ -81,10 +81,10 @@ const BookDetailsPage = () => {
         onClose={() => setShowDeleteModal(false)}
         title="Delete Book"
       >
-        <p style={{ marginBottom: 'var(--space-lg)' }}>
-          Are you sure you want to delete <strong>"{book.title}"</strong>? This action cannot be undone.
+        <p className="mb-6 text-text-secondary">
+          Are you sure you want to delete <strong className="text-text-primary">"{book.title}"</strong>? This action cannot be undone.
         </p>
-        <div className="modal-footer" style={{ padding: 0, borderTop: 'none' }}>
+        <div className="flex justify-end gap-4">
           <button 
             className="btn btn-secondary" 
             onClick={() => setShowDeleteModal(false)}

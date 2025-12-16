@@ -59,9 +59,9 @@ const BookForm = ({
 
   return (
     <form onSubmit={handleSubmit(handleFormSubmit)} noValidate>
-      <div className="form-group">
-        <label htmlFor="title" className="form-label">
-          Title <span style={{ color: 'var(--color-error)' }}>*</span>
+      <div className="mb-6">
+        <label htmlFor="title" className="block mb-2 text-sm font-medium text-text-secondary">
+          Title <span className="text-red-500">*</span>
         </label>
         <input
           id="title"
@@ -72,16 +72,16 @@ const BookForm = ({
           autoFocus
         />
         {errors.title && (
-          <p className="form-error">
+          <p className="mt-1 text-sm text-red-500 flex items-center gap-1">
             <span>⚠️</span>
             {errors.title.message}
           </p>
         )}
       </div>
 
-      <div className="form-group">
-        <label htmlFor="author" className="form-label">
-          Author <span style={{ color: 'var(--color-error)' }}>*</span>
+      <div className="mb-6">
+        <label htmlFor="author" className="block mb-2 text-sm font-medium text-text-secondary">
+          Author <span className="text-red-500">*</span>
         </label>
         <input
           id="author"
@@ -91,15 +91,15 @@ const BookForm = ({
           {...register('author')}
         />
         {errors.author && (
-          <p className="form-error">
+          <p className="mt-1 text-sm text-red-500 flex items-center gap-1">
             <span>⚠️</span>
             {errors.author.message}
           </p>
         )}
       </div>
 
-      <div className="form-group">
-        <label htmlFor="description" className="form-label">
+      <div className="mb-6">
+        <label htmlFor="description" className="block mb-2 text-sm font-medium text-text-secondary">
           Description
         </label>
         <textarea
@@ -110,14 +110,14 @@ const BookForm = ({
           {...register('description')}
         />
         {errors.description && (
-          <p className="form-error">
+          <p className="mt-1 text-sm text-red-500 flex items-center gap-1">
             <span>⚠️</span>
             {errors.description.message}
           </p>
         )}
       </div>
 
-      <div className="form-actions">
+      <div className="flex gap-4 mt-8">
         <button 
           type="button" 
           className="btn btn-secondary btn-lg flex-1"
