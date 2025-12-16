@@ -1,4 +1,4 @@
-import { useEffect, ReactNode } from 'react';
+import { useEffect, type ReactNode } from 'react';
 
 interface ModalProps {
   isOpen: boolean;
@@ -31,7 +31,7 @@ const Modal = ({ isOpen, onClose, title, children }: ModalProps) => {
 
   return (
     <div 
-      className="modal-overlay" 
+      className="modal-overlay"
       onClick={(e) => {
         if (e.target === e.currentTarget) onClose();
       }}
@@ -40,17 +40,17 @@ const Modal = ({ isOpen, onClose, title, children }: ModalProps) => {
       aria-labelledby="modal-title"
     >
       <div className="modal">
-        <div className="modal-header">
-          <h2 id="modal-title" className="modal-title">{title}</h2>
+        <div className="flex items-center justify-between p-6 border-b border-white/10">
+          <h2 id="modal-title" className="text-xl font-semibold text-text-primary">{title}</h2>
           <button 
-            className="modal-close" 
+            className="p-1 text-text-muted hover:text-text-primary hover:bg-white/10 rounded-lg transition-all duration-150"
             onClick={onClose}
             aria-label="Close modal"
           >
             ✕
           </button>
         </div>
-        <div className="modal-body">
+        <div className="p-6">
           {children}
         </div>
       </div>

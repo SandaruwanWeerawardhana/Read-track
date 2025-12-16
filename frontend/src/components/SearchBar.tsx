@@ -5,8 +5,10 @@ const SearchBar = () => {
   const setSearchQuery = useBookStore((state) => state.setSearchQuery);
 
   return (
-    <div className="search-container">
-      <span className="search-icon" aria-hidden="true">🔍</span>
+    <div className="relative max-w-md">
+      <span className="absolute left-4 top-1/2 -translate-y-1/2 text-text-muted pointer-events-none" aria-hidden="true">
+        🔍
+      </span>
       <input
         type="search"
         className="search-input"
@@ -17,7 +19,7 @@ const SearchBar = () => {
       />
       {searchQuery && (
         <button 
-          className="search-clear"
+          className="absolute right-2 top-1/2 -translate-y-1/2 p-1 text-text-muted hover:text-text-primary hover:bg-white/10 rounded-full transition-all duration-150"
           onClick={() => setSearchQuery('')}
           aria-label="Clear search"
         >
