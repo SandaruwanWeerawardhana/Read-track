@@ -1,14 +1,13 @@
-import { create } from 'zustand';
-import type { Book, BookFormData } from '../types/book';
+import { create } from "zustand";
+import type { Book, BookFormData } from "../types/book";
 
-const API_BASE_URL = 'http://localhost:5184/api/books';
+const API_BASE_URL = "http://localhost:5184/api/books";
 
 interface BookStore {
   books: Book[];
   loading: boolean;
   error: string | null;
-  
-  
+
   fetchBooks: () => Promise<void>;
   addBook: (data: BookFormData) => Promise<void>;
   getBook: (id: number) => Book | undefined;
@@ -25,14 +24,18 @@ export const useBookStore = create<BookStore>()((set, get) => ({
     set({ loading: true, error: null });
     try {
       const response = await fetch(API_BASE_URL);
+      console.log("API Response status:", response.status);
       if (!response.ok) {
-        throw new Error('Failed to fetch books');
+        throw new Error("Failed to fetch books");
       }
-      const books = await response.json();
+      const data = await response.json();
+      const books = Array.isArray(data)
+        ? data
+        : data.books || data.data || data.$values || [];
       set({ books, loading: false });
     } catch (error) {
       set({ error: (error as Error).message, loading: false });
-      console.error(error);
+      console.error("Fetch error:", error);
     }
   },
 
@@ -40,23 +43,22 @@ export const useBookStore = create<BookStore>()((set, get) => ({
     set({ loading: true, error: null });
     try {
       const response = await fetch(API_BASE_URL, {
-        method: 'POST',
+        method: "POST",
         headers: {
-          'Content-Type': 'application/json',
+          "Content-Type": "application/json",
         },
         body: JSON.stringify(data),
       });
-      
+
       if (!response.ok) {
-        throw new Error('Failed to add book');
+        throw new Error("Failed to add book");
       }
-      
+
       const newBook = await response.json();
       set((state) => ({
         books: [...state.books, newBook],
         loading: false,
       }));
-   
     } catch (error) {
       throw error;
     }
@@ -70,26 +72,25 @@ export const useBookStore = create<BookStore>()((set, get) => ({
     set({ loading: true, error: null });
     try {
       const response = await fetch(`${API_BASE_URL}/${id}`, {
-        method: 'PUT',
+        method: "PUT",
         headers: {
-          'Content-Type': 'application/json',
+          "Content-Type": "application/json",
         },
         body: JSON.stringify({ id, ...data }),
       });
-      
+
       if (!response.ok) {
-        throw new Error('Failed to update book');
+        throw new Error("Failed to update book");
       }
-      
+
       set((state) => ({
         books: state.books.map((book) =>
           book.id === id ? { ...book, ...data } : book
         ),
         loading: false,
       }));
-    
     } catch (error) {
-      console.error(error);     
+      console.error(error);
       throw error;
     }
   },
@@ -98,20 +99,20 @@ export const useBookStore = create<BookStore>()((set, get) => ({
     set({ loading: true, error: null });
     try {
       const response = await fetch(`${API_BASE_URL}/${id}`, {
-        method: 'DELETE',
+        method: "DELETE",
       });
-      
+
       if (!response.ok) {
-        throw new Error('Failed to delete book');
+        throw new Error("Failed to delete book");
       }
-      
+
       set((state) => ({
         books: state.books.filter((book) => book.id !== id),
         loading: false,
       }));
-    } catch (error) { 
-      console.error(error);     
+    } catch (error) {
+      console.error(error);
       throw error;
     }
-  }, 
+  },
 }));
