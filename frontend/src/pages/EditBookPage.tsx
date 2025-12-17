@@ -10,8 +10,11 @@ const EditBookPage = () => {
   const getBook = useBookStore((state) => state.getBook);
   const updateBook = useBookStore((state) => state.updateBook);
   const fetchBooks = useBookStore((state) => state.fetchBooks);
+  const clearError = useBookStore((state) => state.clearError);
   const books = useBookStore((state) => state.books);
+  const loading = useBookStore((state) => state.loading);
   const [isSubmitting, setIsSubmitting] = useState(false);
+  const [submitError, setSubmitError] = useState<string | null>(null);
 
   const numericId = id ? parseInt(id, 10) : undefined;
   const book = numericId ? getBook(numericId) : undefined;
@@ -25,15 +28,28 @@ const EditBookPage = () => {
   const handleSubmit = async (data: BookFormData) => {
     if (numericId) {
       setIsSubmitting(true);
+      setSubmitError(null);
+      clearError();
       try {
         await updateBook(numericId, data);
         navigate(`/book/${id}`);
-      } catch {
+      } catch (error) {
+        setSubmitError(error instanceof Error ? error.message : "Failed to update book. Please try again.");
       } finally {
         setIsSubmitting(false);
       }
     }
   };
+
+  // Show loading state while fetching books
+  if (loading && books.length === 0) {
+    return (
+      <div className="text-center py-12">
+        <div className="text-4xl mb-4 animate-pulse">📚</div>
+        <p className="text-text-muted">Loading book details...</p>
+      </div>
+    );
+  }
 
   if (!book) {
     return (
@@ -66,6 +82,26 @@ const EditBookPage = () => {
           <h1 className="text-2xl font-semibold text-text-primary mb-8">
             Edit Book
           </h1>
+          
+          {/* Error Alert */}
+          {submitError && (
+            <div className="mb-6 p-4 bg-red-500/10 border border-red-500/30 rounded-lg">
+              <div className="flex items-start gap-3">
+                <span className="text-red-400 text-xl">⚠️</span>
+                <div className="flex-1">
+                  <p className="text-red-400 font-medium">Failed to update book</p>
+                  <p className="text-red-400/80 text-sm mt-1">{submitError}</p>
+                </div>
+                <button 
+                  onClick={() => setSubmitError(null)}
+                  className="text-red-400 hover:text-red-300 transition-colors"
+                >
+                  ✕
+                </button>
+              </div>
+            </div>
+          )}
+          
           <BookForm
             initialData={{
               title: book.title,

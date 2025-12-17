@@ -8,11 +8,13 @@ const BookDetailsPage = () => {
   const navigate = useNavigate();
   const [showDeleteModal, setShowDeleteModal] = useState(false);
   const [isDeleting, setIsDeleting] = useState(false);
+  const [deleteError, setDeleteError] = useState<string | null>(null);
 
   const getBook = useBookStore((state) => state.getBook);
   const deleteBook = useBookStore((state) => state.deleteBook);
   const fetchBooks = useBookStore((state) => state.fetchBooks);
   const books = useBookStore((state) => state.books);
+  const loading = useBookStore((state) => state.loading);
 
   const numericId = id ? parseInt(id, 10) : undefined;
   const book = numericId ? getBook(numericId) : undefined;
@@ -26,15 +28,31 @@ const BookDetailsPage = () => {
   const handleDelete = async () => {
     if (numericId) {
       setIsDeleting(true);
+      setDeleteError(null);
       try {
         await deleteBook(numericId);
         navigate("/home");
-      } catch {
+      } catch (error) {
+        setDeleteError(error instanceof Error ? error.message : "Failed to delete book");
         setIsDeleting(false);
-        setShowDeleteModal(false);
       }
     }
   };
+
+  const handleCloseModal = () => {
+    setShowDeleteModal(false);
+    setDeleteError(null);
+  };
+
+  // Show loading state while fetching books
+  if (loading && books.length === 0) {
+    return (
+      <div className="text-center py-12">
+        <div className="text-4xl mb-4 animate-pulse">📚</div>
+        <p className="text-text-muted">Loading book details...</p>
+      </div>
+    );
+  }
 
 if (!book) {
   return (
@@ -104,16 +122,24 @@ if (!book) {
 
       <Modal
         isOpen={showDeleteModal}
-        onClose={() => setShowDeleteModal(false)}
+        onClose={handleCloseModal}
         title="Delete Book"
       >
+        {deleteError && (
+          <div className="mb-4 p-3 bg-red-500/10 border border-red-500/30 rounded-lg">
+            <p className="text-red-400 text-sm flex items-center gap-2">
+              <span>⚠️</span>
+              {deleteError}
+            </p>
+          </div>
+        )}
         <p className="mb-6 text-text-secondary">
           Are you sure you want to delete <strong className="text-text-primary">"{book.title}"</strong>? This action cannot be undone.
         </p>
         <div className="flex justify-end gap-4">
           <button 
             className="btn btn-secondary" 
-            onClick={() => setShowDeleteModal(false)}
+            onClick={handleCloseModal}
             disabled={isDeleting}
           >
             Cancel

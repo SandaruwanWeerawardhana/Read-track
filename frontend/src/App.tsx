@@ -18,10 +18,7 @@ function App() {
     >
       <BrowserRouter>
         <Routes>
-          {/* Landing page without layout */}
           <Route path="/" element={<LandingPage />} />
-          
-          {/* Protected routes with layout */}
           <Route path="/home" element={<Layout><HomePage /></Layout>} />
           <Route path="/add" element={<Layout><AddBookPage /></Layout>} />
           <Route path="/book/:id" element={<Layout><BookDetailsPage /></Layout>} />

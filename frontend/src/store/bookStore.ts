@@ -13,20 +13,44 @@ interface BookStore {
   getBook: (id: number) => Book | undefined;
   updateBook: (id: number, data: BookFormData) => Promise<void>;
   deleteBook: (id: number) => Promise<void>;
+  clearError: () => void;
 }
+
+// Helper function to handle API errors
+const handleApiError = async (response: Response): Promise<string> => {
+  try {
+    const errorData = await response.json();
+    return errorData.message || errorData.title || `Error: ${response.status} ${response.statusText}`;
+  } catch {
+    return `Error: ${response.status} ${response.statusText}`;
+  }
+};
+
+// Helper function to handle network errors
+const getNetworkErrorMessage = (error: unknown): string => {
+  if (error instanceof TypeError && error.message === 'Failed to fetch') {
+    return 'Unable to connect to server. Please check your internet connection or try again later.';
+  }
+  if (error instanceof Error) {
+    return error.message;
+  }
+  return 'An unexpected error occurred';
+};
 
 export const useBookStore = create<BookStore>()((set, get) => ({
   books: [],
   loading: false,
   error: null,
 
+  clearError: () => set({ error: null }),
+
   fetchBooks: async () => {
     set({ loading: true, error: null });
     try {
       const response = await fetch(API_BASE_URL);
-      console.log("API Response status:", response.status);
       if (!response.ok) {
-        throw new Error("Failed to fetch books");
+        const errorMessage = await handleApiError(response);
+        throw new Error(errorMessage);
       }
       const data = await response.json();
       const books = Array.isArray(data)
@@ -34,7 +58,8 @@ export const useBookStore = create<BookStore>()((set, get) => ({
         : data.books || data.data || data.$values || [];
       set({ books, loading: false });
     } catch (error) {
-      set({ error: (error as Error).message, loading: false });
+      const message = getNetworkErrorMessage(error);
+      set({ error: message, loading: false });
       console.error("Fetch error:", error);
     }
   },
@@ -51,16 +76,20 @@ export const useBookStore = create<BookStore>()((set, get) => ({
       });
 
       if (!response.ok) {
-        throw new Error("Failed to add book");
+        const errorMessage = await handleApiError(response);
+        throw new Error(errorMessage);
       }
 
       const newBook = await response.json();
       set((state) => ({
         books: [...state.books, newBook],
         loading: false,
+        error: null,
       }));
     } catch (error) {
-      throw error;
+      const message = getNetworkErrorMessage(error);
+      set({ loading: false, error: message });
+      throw new Error(message);
     }
   },
 
@@ -80,7 +109,8 @@ export const useBookStore = create<BookStore>()((set, get) => ({
       });
 
       if (!response.ok) {
-        throw new Error("Failed to update book");
+        const errorMessage = await handleApiError(response);
+        throw new Error(errorMessage);
       }
 
       set((state) => ({
@@ -88,10 +118,12 @@ export const useBookStore = create<BookStore>()((set, get) => ({
           book.id === id ? { ...book, ...data } : book
         ),
         loading: false,
+        error: null,
       }));
     } catch (error) {
-      console.error(error);
-      throw error;
+      const message = getNetworkErrorMessage(error);
+      set({ loading: false, error: message });
+      throw new Error(message);
     }
   },
 
@@ -103,16 +135,19 @@ export const useBookStore = create<BookStore>()((set, get) => ({
       });
 
       if (!response.ok) {
-        throw new Error("Failed to delete book");
+        const errorMessage = await handleApiError(response);
+        throw new Error(errorMessage);
       }
 
       set((state) => ({
         books: state.books.filter((book) => book.id !== id),
         loading: false,
+        error: null,
       }));
     } catch (error) {
-      console.error(error);
-      throw error;
+      const message = getNetworkErrorMessage(error);
+      set({ loading: false, error: message });
+      throw new Error(message);
     }
   },
 }));

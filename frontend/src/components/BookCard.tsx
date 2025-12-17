@@ -11,17 +11,25 @@ interface BookCardProps {
 const BookCard = ({ book }: BookCardProps) => {
   const [showDeleteModal, setShowDeleteModal] = useState(false);
   const [isDeleting, setIsDeleting] = useState(false);
+  const [deleteError, setDeleteError] = useState<string | null>(null);
   const deleteBook = useBookStore((state) => state.deleteBook);
 
   const handleDelete = async () => {
     setIsDeleting(true);
+    setDeleteError(null);
     try {
       await deleteBook(book.id);
       setShowDeleteModal(false);
-    } catch {
+    } catch (error) {
+      setDeleteError(error instanceof Error ? error.message : "Failed to delete book");
     } finally {
       setIsDeleting(false);
     }
+  };
+
+  const handleCloseModal = () => {
+    setShowDeleteModal(false);
+    setDeleteError(null);
   };
 
   return (
@@ -58,16 +66,24 @@ const BookCard = ({ book }: BookCardProps) => {
 
       <Modal
         isOpen={showDeleteModal}
-        onClose={() => setShowDeleteModal(false)}
+        onClose={handleCloseModal}
         title="Delete Book"
       >
+        {deleteError && (
+          <div className="mb-4 p-3 bg-red-500/10 border border-red-500/30 rounded-lg">
+            <p className="text-red-400 text-sm flex items-center gap-2">
+              <span>⚠️</span>
+              {deleteError}
+            </p>
+          </div>
+        )}
         <p className="mb-6 text-text-secondary">
           Are you sure you want to delete <strong className="text-text-primary">"{book.title}"</strong>? This action cannot be undone.
         </p>
         <div className="flex justify-end gap-4">
           <button 
             className="btn btn-secondary" 
-            onClick={() => setShowDeleteModal(false)}
+            onClick={handleCloseModal}
             disabled={isDeleting}
           >
             Cancel
