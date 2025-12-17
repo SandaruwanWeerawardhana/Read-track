@@ -1,9 +1,26 @@
+/**
+ * BookForm Component
+ * 
+ * A reusable form component for creating and editing books with validation.
+ * Uses React Hook Form with Zod schema validation for robust form handling.
+ * 
+ * @module components/BookForm
+ */
+
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { z } from "zod";
 import type { BookFormData } from "../types/book";
 import { useNavigate } from "react-router-dom";
 
+/**
+ * Zod Validation Schema for Book Forms
+ * 
+ * Defines validation rules for book form fields:
+ * - title: Required, 1-200 characters
+ * - author: Required, 1-100 characters
+ * - description: Optional, max 2000 characters
+ */
 const bookSchema = z.object({
   title: z
     .string()
@@ -20,6 +37,17 @@ const bookSchema = z.object({
     .or(z.literal("")),
 });
 
+/**
+ * BookForm Props Interface
+ * 
+ * @interface BookFormProps
+ * 
+ * @property {BookFormData} [initialData] - Pre-populated form data for editing
+ * @property {Function} onSubmit - Callback function when form is submitted with valid data
+ * @property {boolean} [isLoading=false] - Loading state to disable form during submission
+ * @property {string} [submitLabel="Save Book"] - Custom label for submit button
+
+ */
 interface BookFormProps {
   initialData?: BookFormData;
   onSubmit: (data: BookFormData) => void;
@@ -27,6 +55,19 @@ interface BookFormProps {
   submitLabel?: string;
 }
 
+/**
+ * BookForm Component
+ * 
+ * Renders a form with title, author, and description fields.
+ * Includes:
+ * - Client-side validation with immediate feedback
+ * - Loading states during submission
+ * - Cancel button with navigation
+ * - Accessible form labels and error messages
+ * 
+ * @param {BookFormProps} props - Component props
+ * @returns {JSX.Element} Rendered form component
+ */
 const BookForm = ({
   initialData,
   onSubmit,
@@ -48,6 +89,12 @@ const BookForm = ({
     },
   });
 
+  /**
+   * Form submit handler
+   * Cleans data (trims description) before passing to parent component
+   * 
+   * @param {BookFormData} data - Validated form data
+   */
   const handleFormSubmit = (data: BookFormData) => {
     const cleanedData = {
       ...data,

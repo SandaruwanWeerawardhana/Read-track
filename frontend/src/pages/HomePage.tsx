@@ -1,9 +1,32 @@
+/**
+ * HomePage Component
+ * 
+ * Main landing page that displays the book collection.
+ * Handles authentication checks, book fetching, and displays:
+ * - Authentication gate for non-logged-in users
+ * - Loading states during data fetching
+ * - Error messages with retry functionality
+ * - Grid of book cards
+ * - Empty state when no books exist
+ * 
+ * @module pages/HomePage
+ */
+
 import { useEffect } from "react";
 import { Link } from "react-router-dom";
 import { useAuth0 } from "@auth0/auth0-react";
 import { useBookStore } from "../store/bookStore";
 import BookCard from "../components/BookCard";
 
+/**
+ * HomePage Component
+ * 
+ * Primary view for authenticated users to see their book collection.
+ * Automatically fetches books on mount if user is authenticated.
+ * 
+ * @returns {JSX.Element} Rendered homepage with book grid or auth prompt
+ * 
+ */
 const HomePage = () => {
   const { isAuthenticated, loginWithRedirect } = useAuth0();
   const fetchBooks = useBookStore((state) => state.fetchBooks);
@@ -11,6 +34,10 @@ const HomePage = () => {
   const books = useBookStore((state) => state.books);
   const error = useBookStore((state) => state.error);
 
+  /**
+   * Fetch books on component mount if user is authenticated
+   * Dependency array ensures fetch only happens when auth state changes
+   */
   useEffect(() => {
     if (isAuthenticated) {
       fetchBooks();
@@ -41,7 +68,6 @@ const HomePage = () => {
 
   return (
     <>
-      {/* Page Header */}
       <div className="flex items-center justify-between flex-wrap gap-6 mb-8">
         <div className="flex gap-4">
           <Link to="/add" className="btn btn-primary btn-lg">
@@ -50,7 +76,6 @@ const HomePage = () => {
         </div>
       </div>
 
-      {/* Error State */}
       {error && (
         <div className="text-center py-6 mb-6 bg-red-500/10 border border-red-500/30 rounded-xl">
           <p className="text-red-400">Error: {error}</p>
@@ -63,7 +88,6 @@ const HomePage = () => {
         </div>
       )}
 
-      {/* Loading State */}
       {loading && (
         <div className="text-center py-12">
           <div className="text-4xl mb-4 animate-pulse">📚</div>
@@ -71,7 +95,6 @@ const HomePage = () => {
         </div>
       )}
 
-      {/* Book Grid */}
       {!loading && books.length > 0 && (
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
           {books.map((book) => (
@@ -80,7 +103,6 @@ const HomePage = () => {
         </div>
       )}
 
-      {/* Empty state */}
       {!loading && books.length === 0 && (
         <div className="text-center py-12 bg-bg-secondary/80 border border-dashed border-white/10 rounded-xl">
           <div className="text-6xl mb-6 opacity-50">📚</div>

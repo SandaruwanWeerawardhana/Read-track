@@ -1,20 +1,50 @@
+/**
+ * LandingPage Component
+ * 
+ * Public landing page for unauthenticated users with:
+ * - Hero section with branding
+ * - Auth0 login flow
+ * - Feature highlights
+ * - Auto-redirect for authenticated users
+ * 
+ * @module pages/LandingPage
+ */
+
 import { useAuth0 } from "@auth0/auth0-react";
 import { Navigate } from "react-router-dom";
 
+/**
+ * LandingPage Component
+ * 
+ * First page users see when visiting the application:
+ * - Displays product branding and features
+ * - Provides "Get Started" button for login
+ * - Automatically redirects authenticated users to /home
+ * - Shows loading state during Auth0 initialization
+ * 
+ * @returns {JSX.Element} Landing page with login or redirect
+ */
 const LandingPage = () => {
   const { isAuthenticated, isLoading, loginWithRedirect } = useAuth0();
 
+  /**
+   * Auto-redirect authenticated users to home page
+   * Prevents authenticated users from seeing landing page
+   */
   if (!isLoading && isAuthenticated) {
     return <Navigate to="/home" replace />;
   }
 
+  /**
+   * Initiates Auth0 login flow
+   * Redirects to Auth0 Universal Login page
+   */
   const handleGetStarted = () => {
     loginWithRedirect();
   };
 
   return (
     <div className="min-h-screen bg-bg-primary flex flex-col">
-      {/* Hero Section */}
       <div className="flex-1 flex flex-col items-center justify-center px-6 text-center">
         <div className="mb-8 animate-bounce">
           <span className="text-8xl">📚</span>
@@ -44,7 +74,6 @@ const LandingPage = () => {
           </button>
         )}
 
-        {/* Features */}
         <div className="grid grid-cols-1 md:grid-cols-3 gap-8 mt-20 max-w-4xl">
           <div className="p-6 bg-bg-secondary/50 border border-white/10 rounded-xl">
             <div className="text-4xl mb-4">📖</div>
@@ -78,7 +107,6 @@ const LandingPage = () => {
         </div>
       </div>
 
-      {/* Footer */}
       <footer className="py-6 text-center text-text-muted text-sm border-t border-white/10">
         <p>© 2025 ReadTrack. All rights reserved.</p>
       </footer>

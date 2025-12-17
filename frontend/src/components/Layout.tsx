@@ -1,18 +1,54 @@
+/**
+ * Layout Component
+ * 
+ * Provides the main application layout structure with:
+ * - Sticky header with branding and authentication
+ * - User profile display when authenticated
+ * - Login/Logout functionality
+ * - Consistent page structure for child components
+ * 
+ * @module components/Layout
+ */
+
 import type { ReactNode } from 'react';
 import { Link } from 'react-router-dom';
 import { useAuth0 } from '@auth0/auth0-react';
 
+/**
+ * LayoutProps Interface
+ * 
+ * @interface LayoutProps
+ * @property {ReactNode} children - Child components to render in the main content area
+ */
 interface LayoutProps {
   children: ReactNode;
 }
 
+/**
+ * Layout Component
+ * 
+ * Wraps page content with consistent header and structure.
+ * Integrates Auth0 for authentication state and actions.
+ * 
+ * @param {LayoutProps} props - Component props
+ * @returns {JSX.Element} Rendered layout with header and content area
+ * 
+ */
 const Layout = ({ children }: LayoutProps) => {
   const { isAuthenticated, isLoading, user, loginWithRedirect, logout } = useAuth0();
 
+  /**
+   * Initiates Auth0 login flow
+   * Redirects user to Auth0 hosted login page
+   */
   const handleLogin = () => {
     loginWithRedirect();
   };
 
+  /**
+   * Logs out the current user
+   * Redirects back to application origin after logout
+   */
   const handleLogout = () => {
     logout({ logoutParams: { returnTo: window.location.origin } });
   };
@@ -26,7 +62,6 @@ const Layout = ({ children }: LayoutProps) => {
             <span>ReadTrack</span>
           </Link>
           
-          {/* Auth Section */}
           <div className="flex items-center gap-4">
             {isLoading ? (
               <div className="w-8 h-8 rounded-full bg-white/10 animate-pulse" />
@@ -58,6 +93,7 @@ const Layout = ({ children }: LayoutProps) => {
           </div>
         </div>
       </header>
+      
       <main className="flex-1 py-8 animate-fade-in">
         <div className="max-w-7xl mx-auto px-6">
           {children}

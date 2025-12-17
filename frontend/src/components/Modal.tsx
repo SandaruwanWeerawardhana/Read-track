@@ -1,5 +1,41 @@
+/**
+ * Modal Component
+ * 
+ * Reusable modal dialog component with:
+ * - Backdrop overlay with click-to-close
+ * - ESC key to close
+ * - Body scroll lock when open
+ * - Accessible ARIA attributes
+ * - Smooth animations
+ * 
+ * @module components/Modal
+ */
+
 import { useEffect, type ReactNode } from "react";
 
+/**
+ * ModalProps Interface
+ * 
+ * @interface ModalProps
+ * @property {boolean} isOpen - Controls modal visibility
+ * @property {Function} onClose - Callback fired when modal should close
+ * @property {string} title - Modal title displayed in header
+ * @property {ReactNode} children - Modal content body
+ * 
+ * @example
+ * ```tsx
+ * const [isOpen, setIsOpen] = useState(false);
+ * 
+ * <Modal 
+ *   isOpen={isOpen}
+ *   onClose={() => setIsOpen(false)}
+ *   title="Delete Confirmation"
+ * >
+ *   <p>Are you sure you want to delete this item?</p>
+ *   <button onClick={handleDelete}>Confirm</button>
+ * </Modal>
+ * ```
+ */
 interface ModalProps {
   isOpen: boolean;
   onClose: () => void;
@@ -7,7 +43,27 @@ interface ModalProps {
   children: ReactNode;
 }
 
+/**
+ * Modal Component
+ * 
+ * Accessible modal dialog that:
+ * - Prevents body scrolling when open
+ * - Closes on ESC key press
+ * - Closes on backdrop click
+ * - Follows ARIA best practices
+ * 
+ * @param {ModalProps} props - Component props
+ * @returns {JSX.Element | null} Modal dialog or null when closed
+ */
 const Modal = ({ isOpen, onClose, title, children }: ModalProps) => {
+  /**
+   * Effect: Keyboard and scroll management
+   * 
+   * Sets up:
+   * - ESC key listener to close modal
+   * - Body scroll lock when modal is open
+   * - Cleanup on unmount or close
+   */
   useEffect(() => {
     const handleEscape = (e: KeyboardEvent) => {
       if (e.key === "Escape") {
@@ -26,11 +82,13 @@ const Modal = ({ isOpen, onClose, title, children }: ModalProps) => {
     };
   }, [isOpen, onClose]);
 
+  // Don't render if modal is closed
   if (!isOpen) return null;
 
   return (
     <div
       onClick={(e) => {
+        // Only close if clicking the backdrop itself, not children
         if (e.target === e.currentTarget) onClose();
       }}
       role="dialog"

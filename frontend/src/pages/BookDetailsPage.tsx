@@ -1,15 +1,44 @@
+/**
+ * BookDetailsPage Component
+ * 
+ * Detailed view of a single book with:
+ * - Full book information display
+ * - Edit and delete actions
+ * - Delete confirmation modal
+ * - Loading and error states
+ * - Not found handling
+ * 
+ * @module pages/BookDetailsPage
+ */
+
 import { useState, useEffect } from "react";
 import { Link, useNavigate, useParams } from "react-router-dom";
 import { useBookStore } from "../store/bookStore";
 import Modal from "../components/Modal";
 
+/**
+ * BookDetailsPage Component
+ * 
+ * Displays full details of a single book:
+ * - Fetches book by ID from URL params
+ * - Shows title, author, and full description
+ * - Provides edit and delete actions
+ * - Handles delete with confirmation modal
+ * - Shows loading and not found states
+ * 
+ * @returns {JSX.Element} Book details page
+ */
 const BookDetailsPage = () => {
+  // Get book ID from URL params
   const { id } = useParams<{ id: string }>();
   const navigate = useNavigate();
+  
+  // Local state for delete operation
   const [showDeleteModal, setShowDeleteModal] = useState(false);
   const [isDeleting, setIsDeleting] = useState(false);
   const [deleteError, setDeleteError] = useState<string | null>(null);
 
+  // Store selectors
   const getBook = useBookStore((state) => state.getBook);
   const deleteBook = useBookStore((state) => state.deleteBook);
   const fetchBooks = useBookStore((state) => state.fetchBooks);
@@ -19,16 +48,27 @@ const BookDetailsPage = () => {
   const numericId = id ? parseInt(id, 10) : undefined;
   const book = numericId ? getBook(numericId) : undefined;
 
+  /**
+   * Effect: Fetch books if not already loaded
+   * Ensures book data is available for display
+   */
   useEffect(() => {
     if (books.length === 0) {
       fetchBooks();
     }
   }, [books.length, fetchBooks]);
 
+  /**
+   * Handles book deletion
+   * 
+   * Deletes the book and navigates to home on success.
+   * Shows error message on failure.
+   */
   const handleDelete = async () => {
     if (numericId) {
       setIsDeleting(true);
       setDeleteError(null);
+      
       try {
         await deleteBook(numericId);
         navigate("/home");
@@ -39,12 +79,14 @@ const BookDetailsPage = () => {
     }
   };
 
+  /**
+   * Closes delete modal and resets error state
+   */
   const handleCloseModal = () => {
     setShowDeleteModal(false);
     setDeleteError(null);
   };
 
-  // Show loading state while fetching books
   if (loading && books.length === 0) {
     return (
       <div className="text-center py-12">
@@ -133,9 +175,11 @@ if (!book) {
             </p>
           </div>
         )}
+        
         <p className="mb-6 text-text-secondary">
           Are you sure you want to delete <strong className="text-text-primary">"{book.title}"</strong>? This action cannot be undone.
         </p>
+        
         <div className="flex justify-end gap-4">
           <button 
             className="btn btn-secondary" 

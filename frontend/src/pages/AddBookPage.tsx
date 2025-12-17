@@ -1,23 +1,60 @@
+/**
+ * AddBookPage Component
+ * 
+ * Page for creating new books with:
+ * - Form validation using BookForm component
+ * - Error handling and display
+ * - Loading states during submission
+ * - Navigation on success
+ * - Back navigation link
+ * 
+ * @module pages/AddBookPage
+ */
+
 import { useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import { useBookStore } from "../store/bookStore";
 import BookForm from "../components/BookForm";
 import type { BookFormData } from "../types/book";
 
+/**
+ * AddBookPage Component
+ * 
+ * Handles the creation of new books:
+ * - Renders BookForm with validation
+ * - Submits data to store's addBook action
+ * - Navigates to home on success
+ * - Displays dismissable errors on failure
+ * 
+ * @returns {JSX.Element} Add book page with form
+ */
 const AddBookPage = () => {
   const navigate = useNavigate();
+  
   const addBook = useBookStore((state) => state.addBook);
   const clearError = useBookStore((state) => state.clearError);
+  
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [submitError, setSubmitError] = useState<string | null>(null);
 
+  /**
+   * Handles form submission
+   * 
+   * Validates and submits book data:
+   * - Shows loading state during API call
+   * - Navigates to /home on success
+   * - Displays error message on failure
+   * 
+   * @param {BookFormData} data - Validated form data from BookForm
+   */
   const handleSubmit = async (data: BookFormData) => {
     setIsSubmitting(true);
     setSubmitError(null);
     clearError();
+    
     try {
       await addBook(data);
-      navigate("/home");
+      navigate("/home"); 
     } catch (error) {
       setSubmitError(error instanceof Error ? error.message : "Failed to add book. Please try again.");
     } finally {
@@ -33,13 +70,13 @@ const AddBookPage = () => {
       >
         ← Back to Books
       </Link>
+      
       <div className="max-w-xl mx-auto">
         <div className="bg-bg-secondary/80 border border-white/10 rounded-xl p-8">
           <h1 className="text-2xl font-semibold text-text-primary mb-8">
             Add New Book
           </h1>
           
-          {/* Error Alert */}
           {submitError && (
             <div className="mb-6 p-4 bg-red-500/10 border border-red-500/30 rounded-lg">
               <div className="flex items-start gap-3">
@@ -51,6 +88,7 @@ const AddBookPage = () => {
                 <button 
                   onClick={() => setSubmitError(null)}
                   className="text-red-400 hover:text-red-300 transition-colors"
+                  aria-label="Dismiss error"
                 >
                   ✕
                 </button>
