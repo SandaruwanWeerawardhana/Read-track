@@ -50,7 +50,7 @@ const Layout = ({ children }: LayoutProps) => {
    * Redirects back to application origin after logout
    */
   const handleLogout = () => {
-    logout({ logoutParams: { returnTo: window.location.origin } });
+    logout({ logoutParams: { returnTo: globalThis.location.origin } });
   };
 
   return (

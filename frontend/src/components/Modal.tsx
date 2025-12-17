@@ -22,19 +22,6 @@ import { useEffect, type ReactNode } from "react";
  * @property {string} title - Modal title displayed in header
  * @property {ReactNode} children - Modal content body
  * 
- * @example
- * ```tsx
- * const [isOpen, setIsOpen] = useState(false);
- * 
- * <Modal 
- *   isOpen={isOpen}
- *   onClose={() => setIsOpen(false)}
- *   title="Delete Confirmation"
- * >
- *   <p>Are you sure you want to delete this item?</p>
- *   <button onClick={handleDelete}>Confirm</button>
- * </Modal>
- * ```
  */
 interface ModalProps {
   isOpen: boolean;
@@ -56,14 +43,6 @@ interface ModalProps {
  * @returns {JSX.Element | null} Modal dialog or null when closed
  */
 const Modal = ({ isOpen, onClose, title, children }: ModalProps) => {
-  /**
-   * Effect: Keyboard and scroll management
-   * 
-   * Sets up:
-   * - ESC key listener to close modal
-   * - Body scroll lock when modal is open
-   * - Cleanup on unmount or close
-   */
   useEffect(() => {
     const handleEscape = (e: KeyboardEvent) => {
       if (e.key === "Escape") {
