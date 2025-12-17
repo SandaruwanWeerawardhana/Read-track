@@ -39,7 +39,7 @@ const EditBookPage = () => {
     return (
       <>
 
-        <Link to="/" className="inline-flex items-center gap-2 text-text-secondary font-medium mb-6 hover:text-accent-primary transition-colors duration-150">
+        <Link to="/home" className="inline-flex items-center gap-2 text-text-secondary font-medium mb-6 hover:text-accent-primary transition-colors duration-150">
           ← Back to Books
         </Link>
         <div className="text-center py-12 bg-bg-secondary/80 border border-dashed border-white/10 rounded-xl">
@@ -48,7 +48,7 @@ const EditBookPage = () => {
           <p className="text-text-muted mb-8">
             The book you're looking for doesn't exist or has been deleted.
           </p>
-          <Link to="/" className="btn btn-primary btn-lg">
+          <Link to="/home" className="btn btn-primary btn-lg">
             Go to Home
           </Link>
         </div>

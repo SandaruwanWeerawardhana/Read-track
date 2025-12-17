@@ -1,18 +1,43 @@
 import { useEffect } from "react";
 import { Link } from "react-router-dom";
+import { useAuth0 } from "@auth0/auth0-react";
 import { useBookStore } from "../store/bookStore";
 import BookCard from "../components/BookCard";
 
 const HomePage = () => {
+  const { isAuthenticated, loginWithRedirect } = useAuth0();
   const fetchBooks = useBookStore((state) => state.fetchBooks);
   const loading = useBookStore((state) => state.loading);
   const books = useBookStore((state) => state.books);
   const error = useBookStore((state) => state.error);
 
   useEffect(() => {
-    fetchBooks();
-  }, [fetchBooks]);
+    if (isAuthenticated) {
+      fetchBooks();
+    }
+  }, [fetchBooks, isAuthenticated]);
 
+  if (!isAuthenticated) {
+    return (
+      <div className="min-h-[60vh] flex items-center justify-center">
+        <div className="bg-bg-primary/50 backdrop-blur-xl border border-white/10 p-12 rounded-2xl max-w-2xl w-full text-center shadow-2xl">
+          <div className="text-8xl mb-8 animate-bounce">📚</div>
+          <h1 className="text-4xl md:text-5xl font-bold mb-6 logo-gradient">
+            Welcome to ReadTrack
+          </h1>
+          <p className="text-xl text-text-secondary mb-10 leading-relaxed max-w-lg mx-auto">
+            Your personal sanctuary for tracking books. Organize your reading journey, manage your collection, and never lose track of a good story again.
+          </p>
+          <button
+            onClick={() => loginWithRedirect()}
+            className="btn btn-primary btn-xl text-lg px-8 py-4 shadow-lg shadow-accent-primary/20 hover:scale-105 transition-transform"
+          >
+            Login to Get Started
+          </button>
+        </div>
+      </div>
+    );
+  }
 
   return (
     <>

@@ -28,7 +28,7 @@ const BookDetailsPage = () => {
       setIsDeleting(true);
       try {
         await deleteBook(numericId);
-        navigate("/");
+        navigate("/home");
       } catch {
         setIsDeleting(false);
         setShowDeleteModal(false);
@@ -40,7 +40,7 @@ if (!book) {
   return (
     <>
       <Link
-        to="/"
+        to="/home"
         className="inline-flex items-center gap-2 text-text-secondary font-medium mb-6 hover:text-accent-primary transition-colors duration-150"
       >
         ← Back to Books
@@ -53,7 +53,7 @@ if (!book) {
         <p className="text-text-muted mb-8">
           The book you're looking for doesn't exist or has been deleted.
         </p>
-          <Link to="/" className="btn btn-primary btn-lg">
+          <Link to="/home" className="btn btn-primary btn-lg">
             Go to Home
           </Link>
         </div>
@@ -64,7 +64,7 @@ if (!book) {
   return (
     <>
       <Link
-        to="/"
+        to="/home"
         className="inline-flex items-center gap-2 text-text-secondary font-medium mb-6 hover:text-accent-primary transition-colors duration-150"
       >
         ← Back to Books

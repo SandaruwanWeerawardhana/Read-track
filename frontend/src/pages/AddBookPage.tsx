@@ -13,7 +13,7 @@ const AddBookPage = () => {
     setIsSubmitting(true);
     try {
       await addBook(data);
-      navigate("/");
+      navigate("/home");
     } catch {
     } finally {
       setIsSubmitting(false);
@@ -23,7 +23,7 @@ const AddBookPage = () => {
   return (
     <>
       <Link
-        to="/"
+        to="/home"
         className="inline-flex items-center gap-2 text-text-secondary font-medium mb-6 hover:text-accent-primary transition-colors duration-150"
       >
         ← Back to Books
